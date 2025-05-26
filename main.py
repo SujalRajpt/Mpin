@@ -12,7 +12,8 @@ def evaluate_mpin(mpin, dob=None, spouse_dob=None, anniversary=None):
 
     if (
         mpin in COMMON_MPINS
-        or calculate_shannon_entropy(mpin) < 1.3
+        or calculate_shannon_entropy(mpin)
+        < 1.3  # this can be adjusted based on requirements
         or check_increasing_and_decreasing_sequence(mpin)
     ):
         reasons.append("COMMONLY_USED")

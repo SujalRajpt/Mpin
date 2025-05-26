@@ -36,9 +36,9 @@ def test_anniversary_exact_match():
     assert "DEMOGRAPHIC_ANNIVERSARY" in result["reasons"]
 
 
-# 6. Hamming distance = 1 with DOB variant
+# 6. Hamming distance = 1 with DOB variant(last charcter is 4 instead of 3)
 def test_dob_hamming_distance_match():
-    result = evaluate_mpin("030303", dob=dob)
+    result = evaluate_mpin("200304", dob=dob)
     assert "DEMOGRAPHIC_DOB_SELF" in result["reasons"]
 
 
@@ -86,7 +86,7 @@ def test_reverse_sequence():
 
 # 14. MPIN similar to anniversary
 def test_anniversary_hamming_match():
-    result = evaluate_mpin("2025", anniversary=anniversary)
+    result = evaluate_mpin("142025", anniversary=anniversary)
     assert "DEMOGRAPHIC_ANNIVERSARY" in result["reasons"]
 
 
@@ -98,23 +98,23 @@ def test_full_year_match():
 
 # 16. MPIN with just day and year
 def test_day_year_combo():
-    result = evaluate_mpin("152004", spouse_dob=spouse_dob)
+    result = evaluate_mpin("200415", spouse_dob=spouse_dob)
     assert "DEMOGRAPHIC_DOB_SPOUSE" in result["reasons"]
 
 
-# 17. MPIN is just today's day + time (no match expected)
+# 17. MPIN is just today's day + time (this should be a stong mpin as it's random)
 def test_only_day_match():
     result = evaluate_mpin("252234", spouse_dob=spouse_dob)
     assert not result["reasons"]
 
 
-# 18. MPIN is far from DOB (no match expected)
+# 18. MPIN is far from DOB (this should be a stong mpin as it's not related to DOB)
 def test_far_hamming_distance():
     result = evaluate_mpin("201805", dob=dob)
     assert not result["reasons"]
 
 
-# 19. MPIN with mix of repeated digits but high entropy
+# 19. MPIN with mix of repeated digits but high entropy (the senstivity can be adjusted)
 def test_repeated_but_strong():
     result = evaluate_mpin("1223")
     assert not result["reasons"]

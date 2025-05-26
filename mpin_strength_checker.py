@@ -2,26 +2,28 @@ import math
 from datetime import datetime
 
 
-COMMON_MPINS = {
+COMMON_MPINS = [
     "1234",
     "1111",
     "0000",
+    "1342",
     "1212",
-    "7777",
-    "2580",
-    "0852",
-    "6969",
-    "4321",
-    "1004",
+    "2222",
+    "4444",
+    "1122",
+    "1986",
+    "2020",
     "123456",
     "111111",
-    "000000",
-    "654321",
-    "112233",
-    "999999",
-    "121212",
     "123123",
-}
+    "000000",
+    "123321",
+    "654321",
+    "666666",
+    "121212",
+    "112233",
+    "555555",
+]
 
 
 def calculate_shannon_entropy(pin):
@@ -110,6 +112,3 @@ def generate_date_variants(date_str):
                     variants.add(combo3)
     variants.add(year)
     return variants
-
-
-# (True, False)
