@@ -10,7 +10,11 @@ from mpin_strength_checker import (
 def evaluate_mpin(mpin, dob=None, spouse_dob=None, anniversary=None):
     reasons = []
 
-    if mpin in COMMON_MPINS or calculate_shannon_entropy(mpin) < 1.3:
+    if (
+        mpin in COMMON_MPINS
+        or calculate_shannon_entropy(mpin) < 1.3
+        or check_increasing_and_decreasing_sequence(mpin)
+    ):
         reasons.append("COMMONLY_USED")
 
     def check_against_demographic(date_str, label):
@@ -20,9 +24,6 @@ def evaluate_mpin(mpin, dob=None, spouse_dob=None, anniversary=None):
         elif any(hamming_distance(mpin, v) <= 1 for v in variants):
             reasons.append(label)
 
-    if check_increasing_and_decreasing_sequence(mpin):
-        reasons.append("COMMONLY_USED")
-
     if dob:
         check_against_demographic(dob, "DEMOGRAPHIC_DOB_SELF")
     if spouse_dob:
@@ -31,21 +32,12 @@ def evaluate_mpin(mpin, dob=None, spouse_dob=None, anniversary=None):
         check_against_demographic(anniversary, "DEMOGRAPHIC_ANNIVERSARY")
 
     return {
-        "strength": "WEAK" if reasons else "STRONG",
         "reasons": reasons,
-        "label": "WEAK" if reasons else "STRONG",
     }
 
 
 if __name__ == "__main__":
-    print(
-        evaluate_mpin(
-            "475348",
-            dob="2003-03-31",
-            spouse_dob="2004-04-03",
-            anniversary="2010-01-01",
-        )
-    )
+    # test with user input
     print("Welcome to the MPIN Strength Checker!")
     print("Please enter your details to evaluate your MPIN strength.")
     dob = input("Enter your date of birth (yyyy-mm-dd): ")
@@ -56,3 +48,14 @@ if __name__ == "__main__":
         mpin, dob=dob, spouse_dob=spouse_dob, anniversary=anniversary
     )
     print(f"MPIN Strength : {result}")
+
+    # test input with hardcoded cases
+
+    # print(
+    #     evaluate_mpin(
+    #         "987654",
+    #         dob="2003-03-31",
+    #         spouse_dob="2004-04-03",
+    #         anniversary="2010-01-01",
+    #     )
+    # )
