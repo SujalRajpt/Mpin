@@ -8,7 +8,7 @@ anniversary = "2025-03-14"
 
 # 1. Common MPIN (from list)
 def test_common_mpin():
-    result = evaluate_mpin("1234")
+    result = evaluate_mpin("1986")
     assert "COMMONLY_USED" in result["reasons"]
 
 

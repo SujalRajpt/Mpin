@@ -55,11 +55,13 @@ def calculate_shannon_entropy(pin):
 
 
 def hamming_distance(s1, s2):
-    """Calculate the Hamming distance between two strings.
+    """Calculate the Hamming distance between your mpin and the variatns we generated.
     The Hamming distance is defined as the number of positions
     at which the corresponding characters are different.
+    You want mpin to be as far away(large hamming distance) from varaints generated from your dob etc.
 
     For example:
+        dob = "2003-01-01"
         s1 = "2003010"
         s2 = "2003020"
         hamming_distance(s1, s2) = 1  # Only the 6th digit is different

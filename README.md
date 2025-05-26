@@ -1,72 +1,127 @@
-## How It Works
+# 🔐 MPIN Strength Checker
 
-### 1. Common MPINs
+This tool helps evaluate the strength of a **Mobile PIN (MPIN)** to protect users from easily guessable and weak codes. It uses a combination of heuristics and entropy analysis to flag weak MPINs based on common patterns and personal data.
 
-I collected commonly used mpins such as `123456`, `000000`, or `111111`. These are checked first because they are easy to guess and should not be used.
+---
 
+## 📱 What is an MPIN?
 
-### 2. Shannon Entropy
+An **MPIN (Mobile Personal Identification Number)** is typically a 4- to 6-digit numeric code used to authenticate users on mobile apps, especially in banking and financial services. Since it's short and user-defined, it’s often vulnerable to poor choices like `123456`, birth dates, or repetitive patterns.
 
-**Shannon entropy** is used to measure how random the MPIN is.
+This tool aims to **prevent weak or predictable MPINs** and encourages the use of safer combinations.
 
-* If the MPIN has repeated or predictable characters (like `111111` or `121212`), it gets a low score.
-* A score below **1.3** is considered weak.
-* This value of 1.3 can be changed later if you want to make the check stricter or more lenient.
+---
 
+## ⚙️ How It Works
 
+Your MPIN is analyzed using the following checks:
 
-### 3. Increasing or Decreasing Patterns
+---
 
-The program checks if your MPIN follows a simple number pattern like:
+### 1. 🔢 Common MPINs List
+
+We start by comparing your MPIN with a known list of the most commonly used (and leaked) PINs like:
+
+* `123456`
+* `000000`
+* `1986`
+
+These PINs are widely used and easily guessable. Even something like `1986` might seem personal or obscure but is among the most leaked combinations.
+
+> 📚 Source: [Common PIN Analysis from haveibeenpwned.com](https://github.com/Slon104/Common-PIN-Analysis-from-haveibeenpwned.com.git)
+
+---
+
+### 2. 📉 Shannon Entropy
+
+**Shannon entropy** is used to measure the randomness of the MPIN.
+
+* Repetitive or patterned MPINs (like `111111`, `121212`) have **low entropy**.
+* A score below **1.3** is marked as **weak**.
+* You can tweak this threshold in the code to be stricter or more lenient.
+
+> 💡 Entropy gives an idea of how hard it would be to guess the MPIN randomly.
+
+---
+
+### 3. 🔼 Ascending/Descending Patterns
+
+We detect common numeric sequences that are predictable, such as:
 
 * `123456` (ascending)
 * `654321` (descending)
 
-These kinds of MPINs are easy to guess and are marked as weak.
+These are marked **weak** because they follow simple, linear patterns that attackers commonly try first.
 
+---
 
-### 4. Hamming Distance
+### 4. 🧠 Hamming Distance from Personal Dates
 
-Even if your MPIN is not exactly the same as a personal date (like your birthday), we check if it's just 1 or 2 digits away from it.
+Checks how *similar* the MPIN is to sensitive dates like your:
 
-For example, if your spouse's birthday is `2003-01-21`, and your MPIN is `200322`, it is marked as weak because it's very similar to `200321`.
+* Date of Birth
+* Spouse's DOB
+* Anniversary
 
-This helps catch MPINs that are only slightly different from dates people often use. The sestivity for this can be adjusted in code. Right now we are going with hamming distance < 1 indicate a weak mpin.
+Example:
+If your spouse’s birthday is `2003-01-21` and your MPIN is `200322`, it’s flagged **weak** — only one digit changed from `200321`.
 
+> 🧮 We use **Hamming distance** to measure similarity. MPINs with a distance less than **1** from a date variant are considered unsafe. This threshold is configurable.
 
+---
 
-### 5. Date Variants
+### 5. 🗓️ Date Variant Matching
 
-For each personal date you give (your birth date, your spouse's birth date, or anniversary), the program creates different versions of it such as:
+For each personal date (DOB, spouse’s DOB, anniversary), we generate several formats like:
 
-* `YYYYMMDD`
-* `DDMMYYYY`
-* `YYMMDD`
-* `MMDDYY`
+* `YYYYMMDD` → `19900101`
+* `DDMMYYYY` → `01011990`
+* `YYMMDD` → `900101`
+* `MMDDYY` → `010190`
 
-It then checks if your MPIN matches any of these or is very close to any of them.
-I have compiled a list of common pins from https://github.com/Slon104/Common-PIN-Analysis-from-haveibeenpwned.com.git. 
+The tool then checks if your MPIN **matches or closely resembles** any of these variants.
 
+---
 
-## Example
+## 🧪 Example
 
 ```bash
 Enter your date of birth (yyyy-mm-dd): 1990-01-01
 Enter your spouse's date of birth (yyyy-mm-dd): 1995-05-15
 Enter your anniversary date (yyyy-mm-dd): 2020-10-10
 Enter your MPIN: 199505
+
 MPIN Strength: WEAK
 Reasons: ['DEMOGRAPHIC_DOB_SPOUSE']
 ```
 
-## Built With
+---
+
+## 🛠️ Built With
 
 * Python 3
-* Uses Python inbuilt libraries like `datetime` and `math`
+* Uses standard Python libraries:
 
+  * `datetime`
+  * `math`
+  * `collections`
+  * `itertools`
 
+---
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License. 
+This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 🚀 Future Improvements (Optional Section)
+
+Here are a few ideas for expanding this tool:
+
+* Support for 4-digit MPINs
+* Integration with password managers or apps
+* Web or mobile interface for non-technical users
+* Machine learning model for PIN pattern learning
+* Add support for non-numeric PINs (alphanumeric)
 
